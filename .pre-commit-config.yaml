@@ -38,4 +38,3 @@ repos:
         stages:
           - pre-push
           - post-commit
-
