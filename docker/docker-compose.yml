@@ -1,0 +1,91 @@
+name: ${COMPOSE_PROJECT_NAME:-claude-local-stack}
+
+services:
+  ollama:
+    image: ${OLLAMA_IMAGE:-ollama/ollama:latest}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${OLLAMA_PORT:-11434}:${OLLAMA_PORT:-11434}"
+    volumes:
+      - ollama:/root/.ollama
+
+    # GPU auto-detection (works when available)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+    environment:
+      - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-2}
+      - OLLAMA_MAX_LOADED_MODELS=${OLLAMA_MAX_LOADED_MODELS:-2}
+      - NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-all}
+
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list > /dev/null 2>&1 || exit 1"]
+      interval: ${OLLAMA_HEALTHCHECK_INTERVAL:-5s}
+      retries: ${OLLAMA_HEALTHCHECK_RETRIES:-10}
+
+  model-init:
+    image: ${OLLAMA_IMAGE:-ollama/ollama:latest}
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+    volumes:
+      - ollama:/root/.ollama
+
+    environment:
+      - OLLAMA_HOST=http://ollama:${OLLAMA_PORT:-11434}
+      - MODELS=${MODELS:-deepseek-v4-flash deepseek-coder llama3 phi3}
+
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      "
+      for MODEL in $$MODELS; do
+        if ollama list | grep -q \"$$MODEL\"; then
+          echo \"✅ $$MODEL already present\";
+        else
+          echo \"⬇️ Pulling $$MODEL\";
+          ollama pull $$MODEL;
+        fi
+      done
+      "
+
+    restart: ${MODEL_INIT_RESTART:-"no"}
+
+  # LiteLLM with routing
+  litellm:
+    build:
+      context: .
+      dockerfile: litellm.Dockerfile
+    image: ${LITELLM_IMAGE:-claude-local-stack-litellm:local}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${LITELLM_PORT:-4000}:${LITELLM_PORT:-4000}"
+
+    depends_on:
+      - ollama
+      - model-init
+
+
+  # Open WebUI (Claude-like frontend)
+  open-webui:
+    image: ${WEBUI_IMAGE:-ghcr.io/open-webui/open-webui:main}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    ports:
+      - "${WEBUI_PORT:-3000}:${WEBUI_CONTAINER_PORT:-8080}"
+
+    environment:
+      - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-http://litellm:4000}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
+
+    depends_on:
+      - litellm
+
+    volumes:
+      - open-webui:/app/backend/data
+
+volumes:
+  ollama:
+  open-webui:

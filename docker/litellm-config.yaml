@@ -1,0 +1,23 @@
+model_list:
+  # 🧠 High-End (Opus Ersatz)
+  - model_name: deepseek-v4
+    litellm_params:
+      model: ollama/deepseek-v4-flash
+
+  # ⚖️ Standard Chat (Sonnet)
+  - model_name: chat
+    litellm_params:
+      model: ollama/llama3
+
+  # ⚡ Fast (Haiku)
+  - model_name: fast
+    litellm_params:
+      model: ollama/phi3
+
+  # 💻 Coding Model
+  - model_name: coder
+    litellm_params:
+      model: ollama/deepseek-coder
+
+router_settings:
+  routing_strategy: usage-based-routing
