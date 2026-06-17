@@ -1,0 +1,11 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:4000",
+    "ANTHROPIC_API_KEY": "no-key",
+
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "chat",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "fast"
+  }
+}
+}
