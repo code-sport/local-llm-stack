@@ -1,0 +1,5 @@
+# Local IDE metadata
+.idea/
+
+# Local runtime env file (copy from env.example)
+docker/.env
