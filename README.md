@@ -155,6 +155,7 @@ docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
 ```
 claude-local-stack/
 ├── env.example
+├── .pre-commit-config.yaml
 ├── docker/
 │   ├── docker-compose.yml
 │   ├── litellm-config.yaml
@@ -167,22 +168,28 @@ claude-local-stack/
 
 ---
 
-## 🛠 Useful Commands
+## 🧹 Pre-commit Integration
 
-Start:
+This repository uses pre-commit hooks for file hygiene and Commitizen checks.
+
+Install and activate hooks:
+
 ```bat
-docker compose -f docker\docker-compose.yml --env-file docker\.env up -d --build
+pip install pre-commit commitizen
+pre-commit install
+pre-commit install --hook-type pre-push
 ```
 
-Stop:
+Run all hooks manually:
+
 ```bat
-docker compose -f docker\docker-compose.yml --env-file docker\.env down
+pre-commit run --all-files
 ```
 
-Logs:
-```bat
-docker compose -f docker\docker-compose.yml --env-file docker\.env logs -f
-```
+Notes:
+
+- `no-commit-to-branch` blocks direct commits to `main`.
+- Commitizen checks run on commit and branch checks run on pre-push/post-commit.
 
 ---
 
