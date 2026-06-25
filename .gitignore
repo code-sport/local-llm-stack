@@ -3,3 +3,9 @@
 
 # Local runtime env file (copy from env.example)
 docker/.env
+
+# Django backend
+backend/**/*.sqlite3
+backend/**/__pycache__/
+backend/**/migrations/*.pyc
+backend/.coverage

@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=75.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "judo-shiai-backend"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "judoshiai.settings"
+python_files = "test_*.py"
+testpaths = ["competitions/tests"]
