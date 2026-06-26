@@ -169,3 +169,29 @@ The file `docker/.env` is gitignored — each developer copies from `env.example
 | `env.example` | Template for `docker/.env` |
 | `claude/settings.json` | Local Claude Code endpoint config |
 | `.pre-commit-config.yaml` | Git hook configuration |
+| `backend/` | JudoShiai API - Django application for competition management |
+
+## Backend (JudoShiai API)
+
+Django 5.1 + DRF application under `backend/`. SQLite by default (dev), PostgreSQL via `DATABASE_URL`.
+
+**Key files:**
+
+| File | Purpose |
+|------|---------|
+| `backend/judoshiai/settings.py` | Django config (DB, DRF, installed apps) |
+| `backend/judoshiai/urls.py` | Root URL routing (`/api/`, `/admin/`) |
+| `backend/competitions/models.py` | Organization, CompetitionSeries, Competition |
+| `backend/competitions/services/import_service.py` | Core import logic with transaction & idempotency |
+| `backend/competitions/views.py` | REST API endpoints (`POST /api/competitions/import/`, `GET /api/competitions/`) |
+| `backend/competitions/management/commands/import_competition.py` | CLI import command |
+| `backend/competitions/admin.py` | Django admin registration |
+
+**Common commands:**
+```bat
+cd backend
+python manage.py migrate
+python manage.py import_competition --file info.json
+python manage.py runserver
+pytest competitions/tests/ -v --cov=competitions
+```
