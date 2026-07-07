@@ -33,9 +33,10 @@ Open the UI:
 ## 📚 Documentation
 
 - [Documentation Index](docs/README.md)
-- [GitHub Gist Usage](docs/gist-usage.md)
+- **[Architecture & Components](docs/architecture.md)** ⭐ *Start here* — Explains Ollama, LiteLLM, Open WebUI and how they work together
 - [Configuration](docs/configuration.md)
 - [Model Routing](docs/models.md)
+- [GitHub Gist Usage](docs/gist-usage.md)
 - [Troubleshooting](docs/troubleshooting.md)
 
 ---
