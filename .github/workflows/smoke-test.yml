@@ -1,0 +1,58 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Prepare compose env
+        run: |
+          cp env.example docker/.env
+          # Skip model downloads in CI – model-init exits immediately if MODELS is empty
+          echo "MODELS=" >> docker/.env
+
+      - name: Start services
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/.env up -d --build
+
+      - name: Wait for all services to be healthy
+        run: |
+          echo "Waiting for services to become healthy..."
+          for service in ollama litellm open-webui; do
+            echo "Checking $service..."
+            for i in $(seq 1 30); do
+              status=$(docker inspect --format='{{.State.Health.Status}}' \
+                $(docker compose -f docker/docker-compose.yml --env-file docker/.env ps -q $service) 2>/dev/null || echo "unknown")
+              if [ "$status" = "healthy" ]; then
+                echo "  ✅ $service is healthy"
+                break
+              fi
+              if [ "$i" -eq 30 ]; then
+                echo "  ❌ $service did not become healthy in time"
+                docker compose -f docker/docker-compose.yml --env-file docker/.env logs $service
+                exit 1
+              fi
+              echo "  ⏳ $service status: $status (attempt $i/30)"
+              sleep 5
+            done
+          done
+
+      - name: Run smoke test
+        shell: pwsh
+        run: ./scripts/smoke-test.ps1 -MaxAttempts 1 -DelaySeconds 0
+
+      - name: Print service logs on failure
+        if: failure()
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/.env logs
+
+
