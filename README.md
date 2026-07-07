@@ -95,17 +95,21 @@ Models are automatically downloaded on first startup using a dedicated init cont
 | Variable | Description | Default |
 |---|---|---|
 | `RESTART_POLICY` | Restart policy for long-running services | `unless-stopped` |
-| `OLLAMA_IMAGE` | Ollama image with tag | `ollama/ollama:latest` |
+| `OLLAMA_IMAGE` | Ollama image with tag | `ollama/ollama:0.11.6` |
 | `OLLAMA_NUM_PARALLEL` | Ollama parallel request handling | `2` |
 | `OLLAMA_MAX_LOADED_MODELS` | Max loaded models in memory | `2` |
 | `OLLAMA_HEALTHCHECK_INTERVAL` | Healthcheck interval | `5s` |
 | `OLLAMA_HEALTHCHECK_RETRIES` | Healthcheck retries | `10` |
 | `MODEL_INIT_RESTART` | Restart behavior for `model-init` | `no` |
 | `LITELLM_IMAGE` | LiteLLM image with tag | `claude-local-stack-litellm:local` |
-| `LITELLM_HOST` | LiteLLM bind host | `0.0.0.0` |
-| `LITELLM_LOG` | LiteLLM log level | `info` |
-| `WEBUI_IMAGE` | Open WebUI image with tag | `ghcr.io/open-webui/open-webui:main` |
+| `LITELLM_HEALTHCHECK_INTERVAL` | Healthcheck interval for LiteLLM | `10s` |
+| `LITELLM_HEALTHCHECK_TIMEOUT` | Healthcheck timeout for LiteLLM | `5s` |
+| `LITELLM_HEALTHCHECK_RETRIES` | Healthcheck retries for LiteLLM | `12` |
+| `WEBUI_IMAGE` | Open WebUI image with tag | `ghcr.io/open-webui/open-webui:v0.6.27` |
 | `WEBUI_CONTAINER_PORT` | Internal container port for Open WebUI | `8080` |
+| `WEBUI_HEALTHCHECK_INTERVAL` | Healthcheck interval for Open WebUI | `10s` |
+| `WEBUI_HEALTHCHECK_TIMEOUT` | Healthcheck timeout for Open WebUI | `5s` |
+| `WEBUI_HEALTHCHECK_RETRIES` | Healthcheck retries for Open WebUI | `12` |
 | `NVIDIA_VISIBLE_DEVICES` | GPU visibility inside containers | `all` |
 
 ### Fast start from template
@@ -133,6 +137,20 @@ Configure:
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "fast"
   }
 }
+```
+
+## ✅ Smoke Test
+
+After startup, run a quick end-to-end availability check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\smoke-test.ps1
+```
+
+Optional retries/timing override:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\smoke-test.ps1 -MaxAttempts 40 -DelaySeconds 2
 ```
 
 ---
@@ -193,6 +211,18 @@ Notes:
 
 - `no-commit-to-branch` blocks direct commits to `main`.
 - Commitizen checks run on commit and branch checks run on pre-push/post-commit.
+
+## 🔁 GitHub CI
+
+GitHub Actions validates pull requests and pushes to `main` with:
+
+- `pre-commit run --all-files`
+- `docker compose ... config` validation
+
+Repository labels are also managed in CI:
+
+- Source of truth: `.github/labels.json`
+- Sync workflow: `.github/workflows/label-sync.yml`
 
 ---
 

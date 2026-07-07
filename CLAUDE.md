@@ -86,6 +86,11 @@ curl http://localhost:4000/models
 curl http://localhost:4000/deepseek-v4/chat/completions -H "Content-Type: application/json" -d "{\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}],\"max_tokens\":10}"
 ```
 
+**Run end-to-end smoke test:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\smoke-test.ps1
+```
+
 **Run pre-commit hooks manually:**
 ```bat
 pre-commit run --all-files
@@ -169,3 +174,8 @@ The file `docker/.env` is gitignored — each developer copies from `env.example
 | `env.example` | Template for `docker/.env` |
 | `claude/settings.json` | Local Claude Code endpoint config |
 | `.pre-commit-config.yaml` | Git hook configuration |
+| `.github/workflows/ci.yml` | GitHub CI (pre-commit + compose config) |
+| `.github/dependabot.yml` | Dependabot schedules and PR labeling |
+| `.github/labels.json` | Source of truth for repository labels |
+| `.github/workflows/label-sync.yml` | Creates/updates labels via CI |
+| `scripts/smoke-test.ps1` | Local service health smoke test |
