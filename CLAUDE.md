@@ -128,8 +128,43 @@ curl http://localhost:11434/api/generate -d "{\"model\":\"<model-name>\",\"promp
 
 ## Claude Code Integration
 
-To point Claude Code at the local stack, set env vars in `~/.claude/settings.json`:
+Claude Code is JetBrains' AI assistant for code. You can configure it to use your local Claude Local Stack instead of the cloud API, enabling private, fully offline AI-assisted development.
 
+### Prerequisites
+
+- Claude Code plugin installed in your JetBrains IDE (IntelliJ, PyCharm, WebStorm, etc.)
+- Claude Local Stack running locally (`docker compose up -d`)
+- LiteLLM service accessible at `http://localhost:4000`
+
+### Option 1: Global Configuration (All Projects)
+
+For all your projects to use the local stack, configure your **global** Claude settings:
+
+1. **Locate the settings file:**
+   - Windows: `%USERPROFILE%\.claude\settings.json`
+   - macOS/Linux: `~/.claude/settings.json`
+
+2. **Create or edit the file** with these environment variables:
+
+   ```json
+   {
+     "env": {
+       "ANTHROPIC_BASE_URL": "http://localhost:4000",
+       "ANTHROPIC_API_KEY": "no-key",
+       "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4",
+       "ANTHROPIC_DEFAULT_SONNET_MODEL": "chat",
+       "ANTHROPIC_DEFAULT_HAIKU_MODEL": "fast"
+     }
+   }
+   ```
+
+3. **Restart your IDE** to apply the changes.
+
+### Option 2: Project-Level Configuration (Recommended)
+
+For development on this project, use the **project-local** `claude/settings.json` file. This repository already ships with the correct settings:
+
+**File: `claude/settings.json`**
 ```json
 {
   "env": {
@@ -142,7 +177,113 @@ To point Claude Code at the local stack, set env vars in `~/.claude/settings.jso
 }
 ```
 
-The project-local `claude/settings.json` ships with these defaults already set — this is the recommended approach for repo-level overrides. (The `claude/` directory follows the Claude Code convention for project-local settings.)
+The `claude/` directory follows the Claude Code convention for project-level settings and overrides any global configuration.
+
+### Model Tier Mapping
+
+The local stack routes Claude Code's model requests as follows:
+
+| Claude Tier | Model Name   | Backend Model         | Use Case                          |
+|-------------|--------------|----------------------|-----------------------------------|
+| **Opus**    | `deepseek-v4`| deepseek-v4-flash    | Complex reasoning, advanced tasks |
+| **Sonnet**  | `chat`       | llama3                | General purpose coding            |
+| **Haiku**   | `fast`       | phi3                  | Quick completions, lightweight    |
+
+You can customize these mappings by editing:
+1. `docker/litellm-config.yaml` (model routing)
+2. Your `claude/settings.json` or `~/.claude/settings.json` (model selection)
+
+### Verifying the Connection
+
+**From the IDE:**
+1. Open Claude Code in your JetBrains IDE (Command Palette / Ctrl+Shift+A → "Claude Code")
+2. Ask a simple question: `What is 2+2?`
+3. If it works, you're connected to the local stack
+4. If it fails, check the IDE logs and troubleshooting tips below
+
+**From the command line:**
+```powershell
+# Verify LiteLLM is running
+curl http://localhost:4000/models
+
+# Verify a model is responding
+curl http://localhost:4000/chat/completions `
+  -H "Content-Type: application/json" `
+  -d '{"messages":[{"role":"user","content":"test"}],"max_tokens":10,"model":"chat"}'
+```
+
+### Using Different Model Tiers
+
+Once connected, Claude Code automatically selects the appropriate tier:
+
+- **For complex tasks:** Use "More" or high-complexity queries → defaults to `deepseek-v4` (Opus)
+- **For standard tasks:** Normal queries → defaults to `chat` (Sonnet)
+- **For quick completions:** Use "Fast" or lightweight requests → defaults to `fast` (Haiku)
+
+Note: You cannot explicitly choose models in Claude Code's UI, but the configured defaults control which backend processes your request.
+
+### Switching Between Local and Cloud Claude
+
+**To use the cloud Claude API temporarily:**
+
+1. Delete or rename your `claude/settings.json` or `~/.claude/settings.json`
+2. Restart your IDE
+3. Claude Code will use default cloud credentials (if set up)
+
+**To return to local:**
+
+1. Restore the `claude/settings.json` file
+2. Restart your IDE
+
+**Alternative: Environment Variables**
+
+You can also control this via IDE environment variables without editing files:
+
+```powershell
+# Use local stack
+$env:ANTHROPIC_BASE_URL = "http://localhost:4000"
+$env:ANTHROPIC_API_KEY = "no-key"
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL = "deepseek-v4"
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL = "chat"
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "fast"
+
+# Then restart the IDE
+```
+
+### Troubleshooting
+
+**"Connection refused" or "timeout":**
+- Verify the stack is running: `docker compose -f docker\docker-compose.yml --env-file docker\.env ps`
+- Check LiteLLM logs: `docker compose -f docker\docker-compose.yml --env-file docker\.env logs litellm`
+- Ensure port 4000 is accessible: `curl http://localhost:4000/models`
+
+**"Invalid API key" or "authorization failed":**
+- The `ANTHROPIC_API_KEY` value does not matter for local use; any non-empty string works
+- Verify `ANTHROPIC_BASE_URL` is exactly `http://localhost:4000` (not `https` or a different port)
+
+**IDE shows old configuration:**
+- Fully restart the IDE (not just close and reopen)
+- Check IDE logs: Help → Show Log in Explorer/Finder
+- Verify the `settings.json` file is valid JSON (no trailing commas, etc.)
+
+**Models are slow or timing out:**
+- Check available models: `curl http://localhost:11434/api/tags`
+- Verify model is loaded: `docker compose -f docker\docker-compose.yml --env-file docker\.env logs ollama`
+- Adjust `OLLAMA_MAX_LOADED_MODELS` in `docker/.env` to load fewer models if memory is constrained
+- Ensure sufficient CPU/GPU resources are available to Docker
+
+### Performance Tips
+
+1. **Keep only frequently-used models loaded** — Edit `docker/.env` and reduce the `MODELS` list to save memory
+2. **Use GPU acceleration** — See "GPU test" in Common Commands if you have NVIDIA GPU
+3. **Monitor resource usage** — Run `docker stats` to see CPU/memory consumption
+4. **Pre-warm models** — Make a quick request to each model before heavy development sessions
+
+### Related Documentation
+
+- [API Access & Keys](./docs/api-access.md) — API authentication and token management
+- [Models & Configuration](./docs/models.md) — Model routing and customization
+- [Troubleshooting](./docs/troubleshooting.md) — Common issues and solutions
 
 ## GitHub Gist Usage (Optional)
 
@@ -185,6 +326,8 @@ The file `docker/.env` is gitignored — each developer copies from `env.example
 | `docker/litellm-config.yaml` | Model name routing |
 | `docker/litellm.Dockerfile` | LiteLLM image with baked config |
 | `docs/README.md` | Documentation index for detailed guides |
+| `docs/claude-code-setup.md` | Complete Claude Code setup and usage guide |
+| `docs/architecture.md` | Architecture overview and component descriptions |
 | `docs/gist-usage.md` | Safe GitHub Gist sharing workflow |
 | `docs/configuration.md` | Configuration guidance and variable references |
 | `docs/models.md` | Model routing and rebuild workflow |
