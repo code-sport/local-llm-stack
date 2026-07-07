@@ -277,4 +277,14 @@ Repository labels are also managed in CI:
 
 This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
 
-**Note:** The bundled models (Ollama, LiteLLM, Open WebUI) are subject to their respective licenses.
+### Bundled Components & Dependencies
+
+The following open-source projects are included in this stack:
+
+| Component | License | Repository |
+|-----------|---------|------------|
+| **Ollama** | MIT | [ollama/ollama](https://github.com/ollama/ollama) |
+| **LiteLLM** | MIT | [BerriAI/litellm](https://github.com/BerriAI/litellm) |
+| **Open WebUI** | MIT | [open-webui/open-webui](https://github.com/open-webui/open-webui) |
+
+All bundled components are licensed under permissive open-source licenses, fully compatible with this project's MIT License.
