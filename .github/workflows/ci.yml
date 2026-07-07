@@ -24,6 +24,9 @@ jobs:
           pip install pre-commit commitizen
 
       - name: Run pre-commit hooks
+        env:
+          # Local safety hook: relevant for developer machines, not CI runners.
+          SKIP: no-commit-to-branch
         run: pre-commit run --all-files
 
       - name: Prepare compose env
