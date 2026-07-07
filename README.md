@@ -13,6 +13,7 @@ This repository contains only the local AI stack and related configuration/docs 
 - ✅ Model routing (chat / coding / fast)
 - ✅ Idempotent model initialization
 - ✅ Docker Compose ready
+- ✅ Gist-friendly config sharing workflow
 
 ---
 
@@ -26,6 +27,22 @@ docker compose -f docker\docker-compose.yml --env-file docker\.env up -d --build
 Open the UI:
 
 👉 http://localhost:3000
+
+---
+
+## 📚 Documentation
+
+- [Documentation Index](docs/README.md)
+- [GitHub Gist Usage](docs/gist-usage.md)
+- [Configuration](docs/configuration.md)
+- [Model Routing](docs/models.md)
+- [Troubleshooting](docs/troubleshooting.md)
+
+---
+
+## 📝 Share Config via GitHub Gist
+
+For the complete guide, see [GitHub Gist Usage](docs/gist-usage.md).
 
 ---
 
@@ -181,6 +198,12 @@ docker compose -f docker\docker-compose.yml -f docker\docker-compose.gpu.yml --e
 
 ```
 claude-local-stack/
+├── docs/
+│   ├── README.md
+│   ├── gist-usage.md
+│   ├── configuration.md
+│   ├── models.md
+│   └── troubleshooting.md
 ├── env.example
 ├── .pre-commit-config.yaml
 ├── CLAUDE.md
