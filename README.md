@@ -275,4 +275,6 @@ Repository labels are also managed in CI:
 
 ## 📜 License
 
-Use at your own risk. Models are subject to their respective licenses.
+This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
+
+**Note:** The bundled models (Ollama, LiteLLM, Open WebUI) are subject to their respective licenses.
