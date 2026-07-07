@@ -2,6 +2,8 @@
 
 A fully local, Docker-based AI stack that mimics Anthropic Claude using open-source models.
 
+This repository contains only the local AI stack and related configuration/docs — no separate application backend is included.
+
 ## ✨ Features
 
 - ✅ Local LLM hosting (Ollama)
@@ -156,6 +158,7 @@ docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
 claude-local-stack/
 ├── env.example
 ├── .pre-commit-config.yaml
+├── CLAUDE.md
 ├── docker/
 │   ├── docker-compose.yml
 │   ├── litellm-config.yaml

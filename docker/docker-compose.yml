@@ -84,6 +84,7 @@ services:
       - litellm
 
     volumes:
+      # Open WebUI stores its own app data here inside the container; this is not a project backend.
       - open-webui:/app/backend/data
 
 volumes:
