@@ -1,4 +1,0 @@
-django>=5.1,<5.2
-djangorestframework>=3.15,<3.16
-gunicorn>=23.0,<24.0
-python-dotenv>=1.0,<2.0
