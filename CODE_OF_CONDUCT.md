@@ -34,7 +34,18 @@ Examples of unacceptable behavior include:
 
 Project maintainers are responsible for enforcing these standards. They will take appropriate and fair corrective action in response to instances of unacceptable behavior.
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project team. All complaints will be reviewed and investigated fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported privately to the repository owner via GitHub: https://github.com/code-sport
+
+When making a report, include:
+
+- A description of the incident
+- Links or screenshots if relevant
+- When and where the incident occurred
+- Any additional context that may help the review
+
+All complaints will be reviewed and investigated fairly and in good faith. Maintainers will respect the privacy and security of the reporter as much as possible.
+
+If the report concerns the repository owner directly, contributors should use any alternative maintainer contact listed in `MAINTAINERS.md` if available.
 
 ## Scope
 

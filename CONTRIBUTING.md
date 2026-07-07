@@ -47,6 +47,7 @@ Thank you for your interest in contributing! This guide will help you get starte
 3. **Code quality:**
    - Pre-commit hooks validate automatically
    - Run manually: `pre-commit run --all-files`
+    - Editors should respect the repository formatting rules in [`.editorconfig`](.editorconfig)
 
 ### Testing Your Changes
 
@@ -104,12 +105,16 @@ claude-local-stack/
    - Expected vs. actual behavior
    - Relevant logs
 
+For general usage questions and support routing, see [SUPPORT.md](SUPPORT.md).
+
 ## ✨ Suggesting Enhancements
 
 1. **Describe** the problem you're trying to solve
 2. **Explain** your proposed solution
 3. **Show** examples of similar implementations
 4. **Link** related issues/discussions
+
+Security-related reports must follow [SECURITY.md](SECURITY.md) and should not be filed as public issues.
 
 ## 📚 Documentation
 
@@ -131,6 +136,8 @@ Maintainers will:
 - **GitHub Issues:** For bug reports and feature requests
 - **Discussions:** For questions and brainstorming
 - **README:** For quick start and architecture overview
+- **Support guide:** [SUPPORT.md](SUPPORT.md)
+- **Maintainers:** [MAINTAINERS.md](MAINTAINERS.md)
 
 ---
 

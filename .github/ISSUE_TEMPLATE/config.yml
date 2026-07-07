@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support and usage questions
+    url: https://github.com/code-sport/local-llm-stack/discussions
+    about: Use Discussions for setup help, usage questions, and architecture conversations when enabled.
+  - name: Security policy
+    url: https://github.com/code-sport/local-llm-stack/blob/main/SECURITY.md
+    about: Please report vulnerabilities privately and do not open public issues.
+  - name: Contribution guide
+    url: https://github.com/code-sport/local-llm-stack/blob/main/CONTRIBUTING.md
+    about: Read the contribution workflow and testing expectations before opening a pull request.

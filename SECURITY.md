@@ -8,7 +8,9 @@ If you discover a security issue, please report it privately to the maintainers.
 
 ### Reporting Process
 
-1. **Email:** Include "SECURITY" in the subject
+1. **Preferred:** Use GitHub's private vulnerability reporting feature for this repository if it is enabled.
+2. **Fallback:** Contact the repository owner privately via GitHub: https://github.com/code-sport
+3. Include `SECURITY` in the subject or opening line so the report can be triaged quickly.
 2. **Details to include:**
    - Description of the vulnerability
    - Steps to reproduce
@@ -16,11 +18,19 @@ If you discover a security issue, please report it privately to the maintainers.
    - Your contact information
    - Whether you'd like credit in the security advisory
 
+If private vulnerability reporting is not available in the repository UI, use the fallback path above instead of opening a public issue.
+
 Maintainers will:
 - Acknowledge receipt within 48 hours
 - Investigate and assess the severity
 - Work on a fix
 - Coordinate disclosure timeline
+
+### Disclosure Expectations
+
+- Please allow maintainers reasonable time to investigate and remediate before public disclosure.
+- After a fix is available, maintainers may publish a changelog entry and, where appropriate, a GitHub security advisory.
+- If a reported issue turns out not to be a vulnerability, maintainers may continue the discussion as a normal bug report.
 
 ## Security Best Practices
 
@@ -71,6 +81,7 @@ When using Claude Local Stack:
 
 ## Questions?
 
-- 📖 [Security Best Practices](docs/configuration.md#security)
+- 📖 [Configuration Guidance](./docs/configuration.md)
 - 🐛 [Report Vulnerability](#reporting-a-vulnerability)
 - 📞 GitHub Issues (non-security only)
+- 🤝 [Support Guide](./SUPPORT.md)

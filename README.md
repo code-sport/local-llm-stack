@@ -11,6 +11,8 @@ This repository contains only the local AI stack and related configuration/docs 
 
 **[📖 Full Documentation](docs/README.md)** | **[🏗️ Architecture Guide](docs/architecture.md)** | **[🐛 Report Issues](https://github.com/code-sport/local-llm-stack/issues)**
 
+Community: **[Contributing](./CONTRIBUTING.md)** · **[Code of Conduct](./CODE_OF_CONDUCT.md)** · **[Support](./SUPPORT.md)** · **[Security](./SECURITY.md)** · **[Maintainers](./MAINTAINERS.md)** · **[Changelog](./CHANGELOG.md)**
+
 ## ✨ Features
 
 - ✅ Local LLM hosting (Ollama)
@@ -21,6 +23,14 @@ This repository contains only the local AI stack and related configuration/docs 
 - ✅ Idempotent model initialization
 - ✅ Docker Compose ready
 - ✅ Gist-friendly config sharing workflow
+
+## 📌 Project Status
+
+Claude Local Stack is an actively maintained open-source project for local development and self-hosted experimentation.
+
+- Intended for: local development, demos, offline experimentation, and team-internal tooling
+- Production use: possible with additional hardening, authentication review, network controls, monitoring, and image/update policies
+- Maintenance model: community contributions are welcome through issues and pull requests
 
 ---
 
@@ -46,6 +56,15 @@ Open the UI:
 - [Model Routing](docs/models.md)
 - [GitHub Gist Usage](docs/gist-usage.md)
 - [Troubleshooting](docs/troubleshooting.md)
+
+## 🤝 Community & Project Health
+
+- [Contributing Guide](./CONTRIBUTING.md) — Development workflow, testing, and PR expectations
+- [Code of Conduct](./CODE_OF_CONDUCT.md) — Community standards and reporting path
+- [Support](./SUPPORT.md) — Where to ask questions and how to get help
+- [Security Policy](./SECURITY.md) — How to report vulnerabilities privately
+- [Maintainers](./MAINTAINERS.md) — Current maintainership and response expectations
+- [Changelog](./CHANGELOG.md) — Notable project changes
 
 ---
 
