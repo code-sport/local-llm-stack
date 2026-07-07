@@ -31,4 +31,3 @@ jobs:
 
       - name: Validate docker compose
         run: docker compose -f docker/docker-compose.yml --env-file docker/.env config
-

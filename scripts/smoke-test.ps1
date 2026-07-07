@@ -40,4 +40,3 @@ Test-Endpoint -Name "Ollama" -Url $OllamaUrl
 Test-Endpoint -Name "LiteLLM" -Url $LiteLlmUrl
 Test-Endpoint -Name "Open WebUI" -Url $WebUiUrl
 Write-Host "Smoke-Test erfolgreich abgeschlossen."
-
