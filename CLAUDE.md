@@ -144,6 +144,19 @@ To point Claude Code at the local stack, set env vars in `~/.claude/settings.jso
 
 The project-local `claude/settings.json` ships with these defaults already set — this is the recommended approach for repo-level overrides. (The `claude/` directory follows the Claude Code convention for project-local settings.)
 
+## GitHub Gist Usage (Optional)
+
+This project can be documented/shared through GitHub Gist when teammates need quick setup help.
+
+Recommended approach:
+
+- Share sanitized snippets only.
+- Prefer sharing `env.example` instead of a real `docker/.env` file.
+- Remove tokens, credentials, and any other secrets before uploading.
+- Prefer secret/private gists for team-internal collaboration.
+- Ask users to copy gist values into local files such as `docker/.env` and `claude/settings.json`.
+- If troubleshooting, include only the minimal logs/config needed for reproduction.
+
 ## Environment Variables
 
 The compose file is fully parameterized. All variables have safe defaults — see `env.example`. Key ones:
@@ -171,6 +184,11 @@ The file `docker/.env` is gitignored — each developer copies from `env.example
 | `docker/docker-compose.yml` | Service orchestration |
 | `docker/litellm-config.yaml` | Model name routing |
 | `docker/litellm.Dockerfile` | LiteLLM image with baked config |
+| `docs/README.md` | Documentation index for detailed guides |
+| `docs/gist-usage.md` | Safe GitHub Gist sharing workflow |
+| `docs/configuration.md` | Configuration guidance and variable references |
+| `docs/models.md` | Model routing and rebuild workflow |
+| `docs/troubleshooting.md` | Validation checks and diagnostics |
 | `env.example` | Template for `docker/.env` |
 | `claude/settings.json` | Local Claude Code endpoint config |
 | `.pre-commit-config.yaml` | Git hook configuration |
