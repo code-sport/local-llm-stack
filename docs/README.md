@@ -11,3 +11,7 @@ This folder contains detailed guides linked from the root `README.md`.
 - [Model Routing](./models.md) — How to add, change, or switch models
 - [GitHub Gist Usage](./gist-usage.md) — Safe way to share configs
 - [Troubleshooting](./troubleshooting.md) — Common issues and solutions
+
+## 📋 Summary Documents
+
+- **[Claude Code Documentation Enhancements](./CLAUDE_CODE_ENHANCEMENTS.md)** — Summary of the 6 main improvements to Claude Code documentation
