@@ -1,8 +1,15 @@
 # Claude Local Stack
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![GitHub Stars](https://img.shields.io/github/stars/code-sport/local-llm-stack.svg?style=social)](https://github.com/code-sport/local-llm-stack)
+
 A fully local, Docker-based AI stack that mimics Anthropic Claude using open-source models.
 
 This repository contains only the local AI stack and related configuration/docs — no separate application backend is included.
+
+**[📖 Full Documentation](docs/README.md)** | **[🏗️ Architecture Guide](docs/architecture.md)** | **[🐛 Report Issues](https://github.com/code-sport/local-llm-stack/issues)**
 
 ## ✨ Features
 

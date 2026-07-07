@@ -1,0 +1,104 @@
+name: 🐛 Bug Report
+description: Report a bug or issue you encountered
+title: "[BUG] "
+labels: ["bug", "triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug! Please fill out the form below to help us resolve it.
+
+  - type: input
+    id: title
+    attributes:
+      label: Bug Title
+      description: Brief description of the bug
+      placeholder: "e.g., Ollama container fails to start with GPU enabled"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Detailed description of what went wrong
+      placeholder: "Describe the issue and what you expected to happen..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the bug?
+      placeholder: |
+        1. Run `docker compose up -d --build`
+        2. Navigate to http://localhost:3000
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: "What should have happened?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: "What actually happened?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: docker-version
+    attributes:
+      label: Docker Version
+      placeholder: "e.g., Docker 25.0.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: gpu
+    attributes:
+      label: GPU Status
+      options:
+        - No GPU / CPU only
+        - NVIDIA GPU
+        - Apple Silicon (Metal)
+        - Other
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs
+      description: Paste relevant error logs (use code blocks)
+      render: bash
+      placeholder: |
+        ```
+        docker compose -f docker\docker-compose.yml --env-file docker\.env logs
+        ```
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other information that might help
+      placeholder: "e.g., recent changes, workarounds tried, etc."
