@@ -41,6 +41,7 @@ Open the UI:
 
 - [Documentation Index](docs/README.md)
 - **[Architecture & Components](docs/architecture.md)** ⭐ *Start here* — Explains Ollama, LiteLLM, Open WebUI and how they work together
+- [API Access, Keys, and User Tokens](docs/api-access.md)
 - [Configuration](docs/configuration.md)
 - [Model Routing](docs/models.md)
 - [GitHub Gist Usage](docs/gist-usage.md)
@@ -57,13 +58,14 @@ For the complete guide, see [GitHub Gist Usage](docs/gist-usage.md).
 ## 🧠 Architecture
 
 ```
-[ Open WebUI ]
-        │
-        ▼
-[ LiteLLM (API Proxy) ]
-        │
-        ▼
-[ Ollama (Local Models) ]
+[ Browser User ] --(WebUI login)--> [ Open WebUI :3000 ]
+                                      |
+                                      | (shared API key in local stack)
+                                      v
+[ API Client ] --(Bearer token)----> [ LiteLLM API :4000 ]
+                                      |
+                                      v
+                               [ Ollama :11434 ]
 ```
 
 ---
@@ -112,7 +114,7 @@ Models are automatically downloaded on first startup using a dedicated init cont
 | `LITELLM_PORT` | External/internal LiteLLM port | `4000` |
 | `WEBUI_PORT` | External Open WebUI port | `3000` |
 | `OPENAI_API_BASE_URL` | Open WebUI target URL (usually LiteLLM service) | `http://litellm:4000` |
-| `OPENAI_API_KEY` | API key used by Open WebUI against LiteLLM | `dummy` |
+| `OPENAI_API_KEY` | Shared key sent by Open WebUI to LiteLLM for local usage; placeholder by default | `dummy` |
 | `MODELS` | Space-separated models pulled/checked by `model-init` | `deepseek-v4-flash deepseek-coder llama3 phi3` |
 
 ### Optional (tuning and overrides)
@@ -144,6 +146,21 @@ copy env.example docker\.env
 docker compose -f docker\docker-compose.yml --env-file docker\.env config
 docker compose -f docker\docker-compose.yml --env-file docker\.env up -d --build
 ```
+
+## 🔐 API Access and Keys
+
+There are two separate access patterns in this stack:
+
+- **Open WebUI users** sign in at `http://localhost:3000` when `WEBUI_AUTH=true`.
+- **API clients** call LiteLLM at `http://localhost:4000` and can send a shared bearer token such as `dummy`.
+
+Important:
+
+- the repository ships with placeholder client keys for local development
+- `OPENAI_API_KEY` is used by the bundled `open-webui` service when it calls LiteLLM
+- this does **not** by itself create per-user API tokens for LiteLLM
+
+For examples with PowerShell, shared token rotation, and user-access guidance, see [docs/api-access.md](docs/api-access.md).
 
 ## ⚙️ Claude Code Integration
 

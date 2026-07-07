@@ -5,21 +5,24 @@ This document explains the three core components of Claude Local Stack and how t
 ## 🏗️ System Architecture
 
 ```
+┌──────────────────────────────┐
+│ Browser User                 │
+│ Login managed by Open WebUI  │
+└──────────────┬───────────────┘
+               │
+               v
 ┌─────────────────────────────────────────────────────────────┐
-│                   Open WebUI (Port 3000)                     │
-│              ChatGPT/Claude-like Web Interface               │
-│              Talks to: LiteLLM (Claude API proxy)            │
+│                Open WebUI (Port 3000)                        │
+│           ChatGPT/Claude-like Web Interface                   │
+│           Forwards requests to LiteLLM                        │
 └──────────────────────┬──────────────────────────────────────┘
-                       │
-                       │ (OpenAI/Claude API calls)
+                       │ (shared key in local stack)
                        │
 ┌──────────────────────▼──────────────────────────────────────┐
 │                  LiteLLM (Port 4000)                         │
-│         Claude-compatible API proxy + model routing          │
-│         Converts: OpenAI API format → Ollama API format      │
-│         Talks to: Ollama (local model runtime)               │
+│        Claude/OpenAI-compatible API proxy + routing           │
+│        Receives API requests from WebUI and SDK clients       │
 └──────────────────────┬──────────────────────────────────────┘
-                       │
                        │ (Ollama API)
                        │
 ┌──────────────────────▼──────────────────────────────────────┐
@@ -27,6 +30,13 @@ This document explains the three core components of Claude Local Stack and how t
 │            Local LLM Runtime (models in memory)              │
 │              Runs: LLaMA, DeepSeek, Phi, etc.               │
 └──────────────────────────────────────────────────────────────┘
+
+External direct API client path:
+
+  API Client (token in Authorization header)
+                     |
+                     v
+              LiteLLM (Port 4000)
 ```
 
 ---
@@ -138,6 +148,15 @@ This document explains the three core components of Claude Local Stack and how t
    and generates response via GPU/CPU inference
    ↓
 6. Response flows back: Ollama → LiteLLM → Open WebUI → Browser
+```
+
+### **Auth + Access Flow:**
+
+```
+1. Browser users authenticate in Open WebUI (if WEBUI_AUTH=true)
+2. Open WebUI calls LiteLLM with configured shared client credential
+3. Direct API clients can also call LiteLLM with bearer token
+4. LiteLLM routes to Ollama model and returns response
 ```
 
 ### **Key Design Principles:**
