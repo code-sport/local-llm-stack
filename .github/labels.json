@@ -1,0 +1,28 @@
+[
+  {
+    "name": "dependencies",
+    "color": "0366d6",
+    "description": "Dependency updates and maintenance"
+  },
+  {
+    "name": "docker",
+    "color": "1d76db",
+    "description": "Docker and container related changes"
+  },
+  {
+    "name": "github-actions",
+    "color": "5319e7",
+    "description": "GitHub Actions workflows and automation"
+  },
+  {
+    "name": "major-update",
+    "color": "b60205",
+    "description": "Potentially breaking dependency updates"
+  },
+  {
+    "name": "ci",
+    "color": "0e8a16",
+    "description": "Continuous integration changes"
+  }
+]
+
