@@ -9,7 +9,7 @@ This repository contains only the local AI stack and related configuration/docs 
 - ✅ Local LLM hosting (Ollama)
 - ✅ Claude-compatible API (LiteLLM proxy)
 - ✅ Web UI (Open WebUI - similar to ChatGPT/Claude)
-- ✅ GPU acceleration (auto-detect)
+- ✅ Optional GPU acceleration (explicit opt-in)
 - ✅ Model routing (chat / coding / fast)
 - ✅ Idempotent model initialization
 - ✅ Docker Compose ready
@@ -110,7 +110,7 @@ Models are automatically downloaded on first startup using a dedicated init cont
 | `WEBUI_HEALTHCHECK_INTERVAL` | Healthcheck interval for Open WebUI | `10s` |
 | `WEBUI_HEALTHCHECK_TIMEOUT` | Healthcheck timeout for Open WebUI | `5s` |
 | `WEBUI_HEALTHCHECK_RETRIES` | Healthcheck retries for Open WebUI | `12` |
-| `NVIDIA_VISIBLE_DEVICES` | GPU visibility inside containers | `all` |
+| `NVIDIA_VISIBLE_DEVICES` | GPU visibility inside containers (leave empty for CPU-only) | `` |
 
 ### Fast start from template
 
@@ -166,6 +166,13 @@ Test:
 
 ```bash
 docker run --rm --gpus all nvidia/cuda:12.0-base nvidia-smi
+```
+
+Start stack with GPU reservation enabled:
+
+```bat
+copy env.example docker\.env
+docker compose -f docker\docker-compose.yml -f docker\docker-compose.gpu.yml --env-file docker\.env up -d --build
 ```
 
 ---
