@@ -108,6 +108,22 @@ services:
       # Disabled by default for production safety — enable only for initial onboarding.
       - ENABLE_SIGNUP=${ENABLE_SIGNUP:-false}
       # WEBUI_SECRET_KEY is injected via /run/secrets/webui_secret_key (see secrets: below)
+      # --- Memory reduction: disable unused heavy features ---
+      # We route through our own LiteLLM container; built-in proxy not needed.
+      - ENABLE_LITELLM=${ENABLE_LITELLM:-false}
+      # RAG web search loads additional ML libraries into RAM.
+      - ENABLE_RAG_WEB_SEARCH=${ENABLE_RAG_WEB_SEARCH:-false}
+      # Image generation pulls ComfyUI/A1111 clients into memory.
+      - ENABLE_IMAGE_GENERATION=${ENABLE_IMAGE_GENERATION:-false}
+      # Code execution starts a Jupyter kernel process.
+      - ENABLE_CODE_EXECUTION=${ENABLE_CODE_EXECUTION:-false}
+      # Community sharing makes outbound API calls at startup.
+      - ENABLE_COMMUNITY_SHARING=${ENABLE_COMMUNITY_SHARING:-false}
+      # Task model auto-loading reserves an extra model slot in Ollama.
+      - TASK_MODEL=${TASK_MODEL:-}
+      - TASK_MODEL_EXTERNAL=${TASK_MODEL_EXTERNAL:-}
+      # Disable STT engine to avoid loading audio libraries.
+      - AUDIO_STT_ENGINE=${AUDIO_STT_ENGINE:-}
 
     secrets:
       - webui_secret_key
