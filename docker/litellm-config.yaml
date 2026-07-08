@@ -13,21 +13,25 @@ model_list:
   - model_name: deepseek-v4
     litellm_params:
       model: ollama/deepseek-v4-flash
+      api_base: "os.environ/OLLAMA_API_BASE"
 
   # ⚖️ Standard Chat (Sonnet)
   - model_name: chat
     litellm_params:
       model: ollama/llama3
+      api_base: "os.environ/OLLAMA_API_BASE"
 
   # ⚡ Fast (Haiku)
   - model_name: fast
     litellm_params:
       model: ollama/phi3
+      api_base: "os.environ/OLLAMA_API_BASE"
 
   # 💻 Coding Model
   - model_name: coder
     litellm_params:
       model: ollama/deepseek-coder
+      api_base: "os.environ/OLLAMA_API_BASE"
 
 router_settings:
   routing_strategy: usage-based-routing

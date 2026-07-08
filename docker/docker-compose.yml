@@ -39,14 +39,15 @@ services:
       - MODELS=${MODELS:-deepseek-v4-flash deepseek-coder llama3 phi3}
 
     entrypoint: ["/bin/bash", "-c"]
-    command: >
+    command: |
       "
+      set -eu
       for MODEL in $$MODELS; do
         if ollama list | grep -q \"$$MODEL\"; then
           echo \"✅ $$MODEL already present\";
         else
           echo \"⬇️ Pulling $$MODEL\";
-          ollama pull $$MODEL;
+          ollama pull $$MODEL || { echo \"❌ Failed to pull $$MODEL\"; exit 1; };
         fi
       done
       "
@@ -65,6 +66,7 @@ services:
 
     environment:
       # LITELLM_MASTER_KEY is injected via /run/secrets/litellm_master_key (see secrets: below)
+      - OLLAMA_API_BASE=http://ollama:${OLLAMA_PORT:-11434}
       - LITELLM_MAX_PARALLEL_REQUESTS=${LITELLM_MAX_PARALLEL_REQUESTS:-10}
       - LITELLM_RPM_LIMIT=${LITELLM_RPM_LIMIT:-60}
       - LITELLM_TPM_LIMIT=${LITELLM_TPM_LIMIT:-100000}
