@@ -42,6 +42,10 @@ services:
     command: |
       "
       set -eu
+      if [ \"$$MODELS\" = \"skip\" ]; then
+        echo \"Skipping model pull (MODELS=skip)\";
+        exit 0;
+      fi
       for MODEL in $$MODELS; do
         if ollama list | grep -q \"$$MODEL\"; then
           echo \"✅ $$MODEL already present\";
@@ -165,6 +169,6 @@ volumes:
 
 secrets:
   litellm_master_key:
-    file: ${SECRETS_DIR}/litellm_master_key
+    file: ${SECRETS_DIR:-./.secrets}/litellm_master_key
   webui_secret_key:
-    file: ${SECRETS_DIR}/webui_secret_key
+    file: ${SECRETS_DIR:-./.secrets}/webui_secret_key

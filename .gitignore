@@ -3,3 +3,6 @@
 
 # Local runtime env file (copy from env.example)
 docker/.env
+
+# Local dev secrets (mounted by docker compose)
+docker/.secrets/

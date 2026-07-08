@@ -204,7 +204,25 @@ Configure:
 
 After startup, run a quick end-to-end availability check:
 
+Prerequisite: ensure secret files exist (default fallback path is `docker/.secrets` when `SECRETS_DIR` is empty).
+
 ```powershell
+New-Item -ItemType Directory -Force -Path docker/.secrets | Out-Null
+$litellmKey = python -c "import secrets; print('sk-' + secrets.token_hex(32))"
+$webuiKey = python -c "import secrets; print(secrets.token_hex(32))"
+Set-Content -Path docker/.secrets/litellm_master_key -Value $litellmKey -Encoding ascii -NoNewline
+Set-Content -Path docker/.secrets/webui_secret_key -Value $webuiKey -Encoding ascii -NoNewline
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\smoke-test.ps1
+```
+
+If your environment cannot pull models from `registry.ollama.ai` (proxy/TLS restrictions), start with pull-skip mode:
+
+```powershell
+$env:MODELS = "skip"
+docker compose -f docker\docker-compose.yml --env-file env.example up -d --build
 powershell -ExecutionPolicy Bypass -File scripts\smoke-test.ps1
 ```
 
