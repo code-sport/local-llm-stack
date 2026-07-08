@@ -64,10 +64,13 @@ services:
       - "${LITELLM_BIND:-127.0.0.1}:${LITELLM_PORT:-4000}:${LITELLM_PORT:-4000}"
 
     environment:
-      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      # LITELLM_MASTER_KEY is injected via /run/secrets/litellm_master_key (see secrets: below)
       - LITELLM_MAX_PARALLEL_REQUESTS=${LITELLM_MAX_PARALLEL_REQUESTS:-10}
       - LITELLM_RPM_LIMIT=${LITELLM_RPM_LIMIT:-60}
       - LITELLM_TPM_LIMIT=${LITELLM_TPM_LIMIT:-100000}
+
+    secrets:
+      - litellm_master_key
 
     depends_on:
       ollama:
@@ -79,7 +82,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:${LITELLM_PORT:-4000}/models', timeout=5)\" || exit 1",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:${LITELLM_PORT:-4000}/health/liveliness', timeout=5)\" || exit 1",
         ]
       interval: ${LITELLM_HEALTHCHECK_INTERVAL:-10s}
       timeout: ${LITELLM_HEALTHCHECK_TIMEOUT:-5s}
@@ -104,9 +107,15 @@ services:
       - WEBUI_AUTH=${WEBUI_AUTH:-true}
       # Disabled by default for production safety — enable only for initial onboarding.
       - ENABLE_SIGNUP=${ENABLE_SIGNUP:-false}
-      # Required: sign session tokens with a stable secret; generate once with:
-      #   python -c "import secrets; print(secrets.token_hex(32))"
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+      # WEBUI_SECRET_KEY is injected via /run/secrets/webui_secret_key (see secrets: below)
+
+    secrets:
+      - webui_secret_key
+
+    entrypoint:
+      - "/bin/sh"
+      - "-c"
+      - "export WEBUI_SECRET_KEY=$(cat /run/secrets/webui_secret_key) && exec bash start.sh"
 
     depends_on:
       litellm:
@@ -135,3 +144,9 @@ services:
 volumes:
   ollama:
   open-webui:
+
+secrets:
+  litellm_master_key:
+    file: ${SECRETS_DIR}/litellm_master_key
+  webui_secret_key:
+    file: ${SECRETS_DIR}/webui_secret_key
