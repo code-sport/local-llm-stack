@@ -1,3 +1,9 @@
+general_settings:
+  # Require a bearer token on every request to LiteLLM.
+  # Set LITELLM_MASTER_KEY in docker/.env to a long random string.
+  # All clients (Open WebUI, SDK, curl) must send: Authorization: Bearer <key>
+  master_key: "os.environ/LITELLM_MASTER_KEY"
+
 model_list:
   # 🧠 High-End (Opus Ersatz)
   - model_name: deepseek-v4

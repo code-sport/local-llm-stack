@@ -19,6 +19,12 @@ services:
       interval: ${OLLAMA_HEALTHCHECK_INTERVAL:-5s}
       retries: ${OLLAMA_HEALTHCHECK_RETRIES:-10}
 
+    deploy:
+      resources:
+        limits:
+          memory: ${OLLAMA_MEMORY_LIMIT:-12g}
+          cpus: "${OLLAMA_CPU_LIMIT:-4.0}"
+
   model-init:
     image: ${OLLAMA_IMAGE:-ollama/ollama:0.11.6}
     depends_on:
@@ -57,6 +63,9 @@ services:
     ports:
       - "${LITELLM_BIND:-127.0.0.1}:${LITELLM_PORT:-4000}:${LITELLM_PORT:-4000}"
 
+    environment:
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+
     depends_on:
       ollama:
         condition: service_healthy
@@ -73,6 +82,11 @@ services:
       timeout: ${LITELLM_HEALTHCHECK_TIMEOUT:-5s}
       retries: ${LITELLM_HEALTHCHECK_RETRIES:-12}
 
+    deploy:
+      resources:
+        limits:
+          memory: ${LITELLM_MEMORY_LIMIT:-1g}
+          cpus: "${LITELLM_CPU_LIMIT:-2.0}"
 
   # Open WebUI (Claude-like frontend)
   open-webui:
@@ -85,7 +99,11 @@ services:
       - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-http://litellm:4000}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy}
       - WEBUI_AUTH=${WEBUI_AUTH:-true}
-      - ENABLE_SIGNUP=${ENABLE_SIGNUP:-true}
+      # Disabled by default for production safety — enable only for initial onboarding.
+      - ENABLE_SIGNUP=${ENABLE_SIGNUP:-false}
+      # Required: sign session tokens with a stable secret; generate once with:
+      #   python -c "import secrets; print(secrets.token_hex(32))"
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
 
     depends_on:
       litellm:
@@ -104,6 +122,12 @@ services:
     volumes:
       # Open WebUI stores its own app data here inside the container; this is not a project backend.
       - open-webui:/app/backend/data
+
+    deploy:
+      resources:
+        limits:
+          memory: ${WEBUI_MEMORY_LIMIT:-512m}
+          cpus: "${WEBUI_CPU_LIMIT:-1.0}"
 
 volumes:
   ollama:
