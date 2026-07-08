@@ -19,6 +19,43 @@ jobs:
           cp env.example docker/.env
           # Skip model downloads in CI – model-init exits immediately if MODELS is empty
           echo "MODELS=" >> docker/.env
+          # Create ephemeral secrets required by docker-compose secret file mounts
+          mkdir -p docker/.secrets
+          python - <<'PY'
+          import secrets
+          from pathlib import Path
+
+          secret_dir = Path("docker/.secrets")
+          (secret_dir / "litellm_master_key").write_text(f"sk-{secrets.token_hex(32)}\n", encoding="utf-8")
+          (secret_dir / "webui_secret_key").write_text(f"{secrets.token_hex(32)}\n", encoding="utf-8")
+          PY
+          # Guard: fail early with debug output if required secret files are missing
+          for secret_file in litellm_master_key webui_secret_key; do
+            if [ ! -f "docker/.secrets/$secret_file" ]; then
+              echo "❌ Missing required secret file: docker/.secrets/$secret_file"
+              echo "Contents of docker/.secrets for debugging:"
+              ls -la docker/.secrets || true
+              exit 1
+            fi
+          done
+          echo "Secret file sizes (bytes):"
+          for secret_file in litellm_master_key webui_secret_key; do
+            file_size=$(wc -c < "docker/.secrets/$secret_file" | tr -d '[:space:]')
+            echo "  - $secret_file: $file_size"
+            if [ "$file_size" -le 0 ]; then
+              echo "❌ Secret file is empty: docker/.secrets/$secret_file"
+              exit 1
+            fi
+          done
+
+      - name: Compose preflight (config resolve)
+        run: |
+          docker compose -f docker/docker-compose.yml --env-file docker/.env config > /dev/null
+          echo "✅ docker compose config resolved successfully"
+          echo "Resolved services:"
+          docker compose -f docker/docker-compose.yml --env-file docker/.env config --services
+          echo "Resolved images:"
+          docker compose -f docker/docker-compose.yml --env-file docker/.env config --images
 
       - name: Start services
         run: |
