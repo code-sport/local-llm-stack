@@ -9,28 +9,35 @@ general_settings:
   max_parallel_requests: "os.environ/LITELLM_MAX_PARALLEL_REQUESTS"
 
 model_list:
-  # 🧠 High-End (Opus Ersatz)
+  # Active profile: Mid (~32 GB RAM / small GPU)
+  # Alternative profile (Low <=16 GB RAM):
+  # - deepseek-v4 -> ollama/qwen2.5:7b
+  # - chat       -> ollama/llama3.2:3b
+  # - fast       -> ollama/phi3:mini
+  # - coder      -> ollama/qwen2.5-coder:7b
+
+  # Opus tier
   - model_name: deepseek-v4
     litellm_params:
-      model: ollama/deepseek-v4-flash
+      model: ollama/qwen2.5:14b
       api_base: "os.environ/OLLAMA_API_BASE"
 
-  # ⚖️ Standard Chat (Sonnet)
+  # Sonnet tier
   - model_name: chat
     litellm_params:
-      model: ollama/llama3
+      model: ollama/qwen2.5:7b
       api_base: "os.environ/OLLAMA_API_BASE"
 
-  # ⚡ Fast (Haiku)
+  # Haiku tier
   - model_name: fast
     litellm_params:
-      model: ollama/phi3
+      model: ollama/gemma2:2b
       api_base: "os.environ/OLLAMA_API_BASE"
 
-  # 💻 Coding Model
+  # Coding tier
   - model_name: coder
     litellm_params:
-      model: ollama/deepseek-coder
+      model: ollama/qwen2.5-coder:7b
       api_base: "os.environ/OLLAMA_API_BASE"
 
 router_settings:
